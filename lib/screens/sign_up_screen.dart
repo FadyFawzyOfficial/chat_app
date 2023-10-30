@@ -9,7 +9,7 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(context) {
     return Scaffold(
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
