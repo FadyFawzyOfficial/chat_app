@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../widgets/main_elevated_button.dart';
 import '../widgets/main_text_field.dart';
-import 'sign_up_screen.dart';
 
-class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(context) {
@@ -32,7 +31,7 @@ class SignInScreen extends StatelessWidget {
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Sign In',
+                'Sign Up',
                 style: TextStyle(fontSize: 24),
               ),
             ),
@@ -41,20 +40,15 @@ class SignInScreen extends StatelessWidget {
             const SizedBox(height: 16),
             const MainTextField(label: 'Password'),
             const SizedBox(height: 24),
-            MainElevatedButton(label: 'Sign In', onPressed: () {}),
+            MainElevatedButton(label: 'Sign Up', onPressed: () {}),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Don\'t have an account?'),
+                const Text('Already have an account?'),
                 TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SignUpScreen(),
-                    ),
-                  ),
-                  child: const Text('Sign Up'),
+                  onPressed: () {},
+                  child: const Text('Sign In'),
                 ),
               ],
             ),
