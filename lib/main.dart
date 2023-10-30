@@ -1,3 +1,4 @@
+import 'package:chat_app/constants/strings.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/sign_in_screen.dart';
@@ -16,10 +17,10 @@ class App extends StatelessWidget {
         brightness: Brightness.dark,
       ),
       routes: {
-        'SignInScreen': (context) => const SignInScreen(),
-        'SignUpScreen': (context) => const SignUpScreen(),
+        kSignInScreen: (context) => const SignInScreen(),
+        kSignUpScreen: (context) => const SignUpScreen(),
       },
-      initialRoute: 'SignInScreen',
+      initialRoute: kSignInScreen,
     );
   }
 }

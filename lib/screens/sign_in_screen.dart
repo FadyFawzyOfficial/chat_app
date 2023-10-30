@@ -1,3 +1,4 @@
+import 'package:chat_app/constants/strings.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/main_elevated_button.dart';
@@ -47,7 +48,7 @@ class SignInScreen extends StatelessWidget {
               children: [
                 const Text('Don\'t have an account?'),
                 TextButton(
-                  onPressed: () => Navigator.pushNamed(context, 'SignUpScreen'),
+                  onPressed: () => Navigator.pushNamed(context, kSignUpScreen),
                   child: const Text('Sign Up'),
                 ),
               ],
