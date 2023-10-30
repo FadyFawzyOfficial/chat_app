@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../widgets/main_elevated_button.dart';
 import '../widgets/main_text_field.dart';
-import 'sign_up_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -48,12 +47,7 @@ class SignInScreen extends StatelessWidget {
               children: [
                 const Text('Don\'t have an account?'),
                 TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SignUpScreen(),
-                    ),
-                  ),
+                  onPressed: () => Navigator.pushNamed(context, 'SignUpScreen'),
                   child: const Text('Sign Up'),
                 ),
               ],

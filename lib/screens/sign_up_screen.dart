@@ -47,7 +47,7 @@ class SignUpScreen extends StatelessWidget {
               children: [
                 const Text('Already have an account?'),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.pop(context),
                   child: const Text('Sign In'),
                 ),
               ],
