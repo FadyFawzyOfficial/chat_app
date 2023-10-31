@@ -4,7 +4,10 @@ import '../widgets/main_elevated_button.dart';
 import '../widgets/main_text_field.dart';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+  SignUpScreen({super.key});
+
+  var email = '';
+  var password = '';
 
   @override
   Widget build(context) {
@@ -36,11 +39,23 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const MainTextField(label: 'Email'),
+            MainTextField(
+              label: 'Email',
+              onChanged: (value) => email = value,
+            ),
             const SizedBox(height: 16),
-            const MainTextField(label: 'Password'),
+            MainTextField(
+              label: 'Password',
+              onChanged: (value) => password = value,
+            ),
             const SizedBox(height: 24),
-            MainElevatedButton(label: 'Sign Up', onPressed: () {}),
+            MainElevatedButton(
+              label: 'Sign Up',
+              onPressed: () {
+                print(email);
+                print(password);
+              },
+            ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

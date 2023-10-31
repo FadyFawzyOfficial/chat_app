@@ -25,7 +25,7 @@ class App extends StatelessWidget {
       ),
       routes: {
         kSignInScreen: (context) => const SignInScreen(),
-        kSignUpScreen: (context) => const SignUpScreen(),
+        kSignUpScreen: (context) => SignUpScreen(),
       },
       initialRoute: kSignInScreen,
     );
