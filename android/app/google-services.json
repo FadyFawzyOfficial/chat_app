@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "547645345985",
+    "project_id": "fady-chat-app",
+    "storage_bucket": "fady-chat-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547645345985:android:ad44b54fd4ce7732bf4440",
+        "android_client_info": {
+          "package_name": "com.fadyfawzy.chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPVrTLULwEmcEiQS2D3HJ-6_pVrQM2saQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
