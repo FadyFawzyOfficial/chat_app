@@ -28,7 +28,7 @@ class ChatScreen extends StatelessWidget {
         children: [
           Expanded(
             child: StreamBuilder(
-              stream: messages.orderBy(kDateKey).snapshots(),
+              stream: messages.orderBy(kDateKey, descending: true).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator.adaptive();
@@ -39,6 +39,7 @@ class ChatScreen extends StatelessWidget {
                     return ListView.builder(
                       controller: _listController,
                       padding: const EdgeInsetsDirectional.all(16),
+                      reverse: true,
                       itemCount: messages.length,
                       itemBuilder: (context, index) => ChatBubble(
                         text: messages[index],
@@ -60,7 +61,7 @@ class ChatScreen extends StatelessWidget {
               });
 
               _listController.animateTo(
-                _listController.position.maxScrollExtent,
+                _listController.initialScrollOffset,
                 duration: const Duration(seconds: 1),
                 curve: Curves.fastOutSlowIn,
               );
