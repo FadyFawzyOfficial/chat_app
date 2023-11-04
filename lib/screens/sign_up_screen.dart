@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../constants/strings.dart';
 import '../utilities/snack_bar_shower.dart';
 import '../widgets/main_elevated_button.dart';
 import '../widgets/main_text_form_field.dart';
@@ -32,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 80),
                 child: Column(
                   children: [
-                    Image.asset('assets/images/scholar.png'),
+                    Image.asset(kLogo),
                     const Text(
                       'Scholar Chat',
                       style: TextStyle(
@@ -69,6 +70,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     setState(() => isLoading = true);
                     if (isFormValid) await signIn();
                     showSnackBar(context, 'Success');
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      kChatScreen,
+                      (route) => false,
+                    );
                   } on FirebaseAuthException catch (e) {
                     showSnackBar(context, e.message);
                   }
