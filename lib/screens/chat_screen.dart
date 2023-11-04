@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/strings.dart';
@@ -8,6 +9,9 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(context) {
+    // Create a CollectionReference called messages that references the firestore collection
+    CollectionReference messages =
+        FirebaseFirestore.instance.collection('messages');
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -30,7 +34,10 @@ class ChatScreen extends StatelessWidget {
               ),
             ),
           ),
-          const MessageTextField(),
+          MessageTextField(
+            // Call the messages CollectionReference to add a new message
+            onSubmitted: (message) => messages.add({'message': message}),
+          ),
         ],
       ),
     );
@@ -38,14 +45,16 @@ class ChatScreen extends StatelessWidget {
 }
 
 class MessageTextField extends StatelessWidget {
-  const MessageTextField({super.key});
+  final Function(String) onSubmitted;
+  const MessageTextField({super.key, required this.onSubmitted});
 
   @override
   Widget build(context) {
-    return const Padding(
-      padding: EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.all(16),
       child: TextField(
-        decoration: InputDecoration(
+        onSubmitted: onSubmitted,
+        decoration: const InputDecoration(
           hintText: 'Send a message',
           suffixIcon: Icon(Icons.send_rounded),
           border: OutlineInputBorder(
