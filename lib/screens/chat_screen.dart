@@ -33,7 +33,9 @@ class ChatScreen extends StatelessWidget {
               stream: messages.orderBy(kDateKey, descending: true).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator.adaptive();
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
                 } else {
                   if (snapshot.hasData) {
                     final List<Message> messages = List.from(snapshot.data!.docs
