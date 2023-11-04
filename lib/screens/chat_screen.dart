@@ -26,7 +26,7 @@ class ChatScreen extends StatelessWidget {
         children: [
           Expanded(
             child: StreamBuilder(
-              stream: messages.snapshots(),
+              stream: messages.orderBy(kDateKey).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator.adaptive();
@@ -50,7 +50,10 @@ class ChatScreen extends StatelessWidget {
           ),
           MessageTextField(
             // Call the messages CollectionReference to add a new message
-            onSubmitted: (message) => messages.add({kMessageKey: message}),
+            onSubmitted: (message) => messages.add({
+              kMessageKey: message,
+              kDateKey: DateTime.now(),
+            }),
           ),
         ],
       ),
@@ -60,6 +63,7 @@ class ChatScreen extends StatelessWidget {
 
 class MessageTextField extends StatelessWidget {
   final Function(String) onSubmitted;
+
   const MessageTextField({super.key, required this.onSubmitted});
 
   @override
