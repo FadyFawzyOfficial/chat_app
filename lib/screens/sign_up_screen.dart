@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../utilities/snack_bar_shower.dart';
 import '../widgets/main_elevated_button.dart';
 import '../widgets/main_text_field.dart';
 
@@ -54,13 +55,9 @@ class SignUpScreen extends StatelessWidget {
               label: 'Sign Up',
               onPressed: () async {
                 try {
-                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                    email: email,
-                    password: password,
-                  );
+                  await signIn();
                 } on FirebaseAuthException catch (e) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(e.message ?? '')));
+                  showSnackBar(context, e.message);
                 }
               },
             ),
@@ -78,6 +75,13 @@ class SignUpScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> signIn() async {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
     );
   }
 }
