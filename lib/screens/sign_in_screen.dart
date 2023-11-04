@@ -1,11 +1,15 @@
-import 'package:chat_app/constants/strings.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../constants/strings.dart';
 import '../widgets/main_elevated_button.dart';
 import '../widgets/main_text_field.dart';
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+  SignInScreen({super.key});
+
+  var email = '';
+  var password = '';
 
   @override
   Widget build(context) {
@@ -37,11 +41,30 @@ class SignInScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const MainTextField(label: 'Email'),
+            MainTextField(
+              label: 'Email',
+              onChanged: (value) => email = value,
+            ),
             const SizedBox(height: 16),
-            const MainTextField(label: 'Password'),
+            MainTextField(
+              label: 'Password',
+              onChanged: (value) => password = value,
+            ),
             const SizedBox(height: 24),
-            MainElevatedButton(label: 'Sign In', onPressed: () {}),
+            MainElevatedButton(
+              label: 'Sign In',
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: email,
+                    password: password,
+                  );
+                } on FirebaseAuthException catch (e) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(e.message ?? '')));
+                }
+              },
+            ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

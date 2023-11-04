@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/main_elevated_button.dart';
@@ -51,9 +52,16 @@ class SignUpScreen extends StatelessWidget {
             const SizedBox(height: 24),
             MainElevatedButton(
               label: 'Sign Up',
-              onPressed: () {
-                print(email);
-                print(password);
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: email,
+                    password: password,
+                  );
+                } on FirebaseAuthException catch (e) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(e.message ?? '')));
+                }
               },
             ),
             const SizedBox(height: 8),
