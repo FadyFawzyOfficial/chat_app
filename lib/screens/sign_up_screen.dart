@@ -60,6 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 16),
               MainTextFormField(
                 label: 'Password',
+                obscureText: true,
                 onSaved: (value) => password = value ?? '',
               ),
               const SizedBox(height: 24),

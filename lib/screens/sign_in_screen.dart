@@ -60,6 +60,7 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(height: 16),
               MainTextFormField(
                 label: 'Password',
+                obscureText: true,
                 onSaved: (value) => password = value ?? '',
               ),
               const SizedBox(height: 24),
@@ -71,7 +72,11 @@ class _SignInScreenState extends State<SignInScreen> {
                     setState(() => isLoading = true);
                     if (isFormValid) await signUp();
                     showSnackBar(context, 'Success');
-                    Navigator.pushReplacementNamed(context, kChatScreen, arguments: email);
+                    Navigator.pushReplacementNamed(
+                      context,
+                      kChatScreen,
+                      arguments: email,
+                    );
                   } on FirebaseAuthException catch (e) {
                     showSnackBar(context, e.message);
                   }
