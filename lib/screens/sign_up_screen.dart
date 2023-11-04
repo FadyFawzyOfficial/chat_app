@@ -75,6 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       context,
                       kChatScreen,
                       (route) => false,
+                      arguments: email,
                     );
                   } on FirebaseAuthException catch (e) {
                     showSnackBar(context, e.message);

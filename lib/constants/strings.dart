@@ -5,6 +5,7 @@ const kLogo = 'assets/images/scholar.png';
 const kMessageKey = 'message';
 const kMessagesKey = 'messages';
 const kDateKey = 'date';
+const kEmailKey = 'email';
 
 // Screen Names
 const kSignInScreen = 'SignIn';

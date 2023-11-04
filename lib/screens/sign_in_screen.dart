@@ -71,7 +71,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     setState(() => isLoading = true);
                     if (isFormValid) await signUp();
                     showSnackBar(context, 'Success');
-                    Navigator.pushReplacementNamed(context, kChatScreen);
+                    Navigator.pushReplacementNamed(context, kChatScreen, arguments: email);
                   } on FirebaseAuthException catch (e) {
                     showSnackBar(context, e.message);
                   }

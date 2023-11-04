@@ -11,6 +11,7 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(context) {
+    final email = ModalRoute.of(context)!.settings.arguments as String;
     // Create a CollectionReference called messages that references the firestore collection
     final messages = FirebaseFirestore.instance.collection(kMessagesKey);
     return Scaffold(
@@ -58,6 +59,7 @@ class ChatScreen extends StatelessWidget {
               messages.add({
                 kMessageKey: message,
                 kDateKey: DateTime.now(),
+                kEmailKey: email,
               });
 
               _listController.animateTo(
