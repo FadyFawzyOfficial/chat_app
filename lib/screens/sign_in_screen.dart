@@ -54,6 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(height: 24),
               MainTextFormField(
                 label: 'Email',
+                keyboardType: TextInputType.emailAddress,
                 onSaved: (value) => email = value ?? '',
               ),
               const SizedBox(height: 16),
