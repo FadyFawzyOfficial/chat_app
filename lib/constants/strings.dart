@@ -1,7 +1,12 @@
 // Assets Paths
 const kLogo = 'assets/images/scholar.png';
 
-// Screen names
+// Constants Keys
+const kMessageKey = 'message';
+const kMessagesKey = 'messages';
+const kDateKey = 'date';
+
+// Screen Names
 const kSignInScreen = 'SignIn';
 const kSignUpScreen = 'SignUp';
 const kChatScreen = 'Chat';

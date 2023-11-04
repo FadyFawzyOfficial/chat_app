@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/strings.dart';
@@ -8,6 +9,8 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(context) {
+    // Create a CollectionReference called messages that references the firestore collection
+    final messages = FirebaseFirestore.instance.collection(kMessagesKey);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -22,15 +25,36 @@ class ChatScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsetsDirectional.all(16),
-              itemCount: 10,
-              itemBuilder: (context, index) => const ChatBubble(
-                text: 'I am excellent in my work',
-              ),
+            child: StreamBuilder(
+              stream: messages.orderBy(kDateKey).snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator.adaptive();
+                } else {
+                  if (snapshot.hasData) {
+                    final messages = List.from(snapshot.data!.docs
+                        .map((message) => message[kMessageKey]));
+                    return ListView.builder(
+                      padding: const EdgeInsetsDirectional.all(16),
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) => ChatBubble(
+                        text: messages[index],
+                      ),
+                    );
+                  } else {
+                    return const Text('There was an error');
+                  }
+                }
+              },
             ),
           ),
-          const MessageTextField(),
+          MessageTextField(
+            // Call the messages CollectionReference to add a new message
+            onSubmitted: (message) => messages.add({
+              kMessageKey: message,
+              kDateKey: DateTime.now(),
+            }),
+          ),
         ],
       ),
     );
@@ -38,14 +62,17 @@ class ChatScreen extends StatelessWidget {
 }
 
 class MessageTextField extends StatelessWidget {
-  const MessageTextField({super.key});
+  final Function(String) onSubmitted;
+
+  const MessageTextField({super.key, required this.onSubmitted});
 
   @override
   Widget build(context) {
-    return const Padding(
-      padding: EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.all(16),
       child: TextField(
-        decoration: InputDecoration(
+        onSubmitted: onSubmitted,
+        decoration: const InputDecoration(
           hintText: 'Send a message',
           suffixIcon: Icon(Icons.send_rounded),
           border: OutlineInputBorder(
