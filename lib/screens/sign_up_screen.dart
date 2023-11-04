@@ -60,6 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 16),
               MainTextFormField(
                 label: 'Password',
+                obscureText: true,
                 onSaved: (value) => password = value ?? '',
               ),
               const SizedBox(height: 24),
@@ -75,6 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       context,
                       kChatScreen,
                       (route) => false,
+                      arguments: email,
                     );
                   } on FirebaseAuthException catch (e) {
                     showSnackBar(context, e.message);

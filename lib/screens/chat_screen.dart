@@ -2,13 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/strings.dart';
+import '../models/message.dart';
 import '../widgets/chat_bubble.dart';
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
+  ChatScreen({super.key});
+
+  final _listController = ScrollController();
 
   @override
   Widget build(context) {
+    final email = ModalRoute.of(context)!.settings.arguments as String;
     // Create a CollectionReference called messages that references the firestore collection
     final messages = FirebaseFirestore.instance.collection(kMessagesKey);
     return Scaffold(
@@ -26,19 +30,22 @@ class ChatScreen extends StatelessWidget {
         children: [
           Expanded(
             child: StreamBuilder(
-              stream: messages.orderBy(kDateKey).snapshots(),
+              stream: messages.orderBy(kDateKey, descending: true).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator.adaptive();
                 } else {
                   if (snapshot.hasData) {
-                    final messages = List.from(snapshot.data!.docs
-                        .map((message) => message[kMessageKey]));
+                    final List<Message> messages = List.from(snapshot.data!.docs
+                        .map((message) => Message.fromMap(message)));
                     return ListView.builder(
+                      controller: _listController,
                       padding: const EdgeInsetsDirectional.all(16),
+                      reverse: true,
                       itemCount: messages.length,
                       itemBuilder: (context, index) => ChatBubble(
-                        text: messages[index],
+                        text: messages[index].message,
+                        isOwner: messages[index].email == email,
                       ),
                     );
                   } else {
@@ -50,10 +57,19 @@ class ChatScreen extends StatelessWidget {
           ),
           MessageTextField(
             // Call the messages CollectionReference to add a new message
-            onSubmitted: (message) => messages.add({
-              kMessageKey: message,
-              kDateKey: DateTime.now(),
-            }),
+            onSubmitted: (message) {
+              messages.add({
+                kMessageKey: message,
+                kDateKey: DateTime.now(),
+                kEmailKey: email,
+              });
+
+              _listController.animateTo(
+                _listController.initialScrollOffset,
+                duration: const Duration(seconds: 1),
+                curve: Curves.fastOutSlowIn,
+              );
+            },
           ),
         ],
       ),
@@ -64,18 +80,30 @@ class ChatScreen extends StatelessWidget {
 class MessageTextField extends StatelessWidget {
   final Function(String) onSubmitted;
 
-  const MessageTextField({super.key, required this.onSubmitted});
+  MessageTextField({super.key, required this.onSubmitted});
+
+  final _controller = TextEditingController();
 
   @override
   Widget build(context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: TextField(
-        onSubmitted: onSubmitted,
-        decoration: const InputDecoration(
+        controller: _controller,
+        onSubmitted: (value) {
+          onSubmitted(value);
+          _controller.clear();
+        },
+        decoration: InputDecoration(
           hintText: 'Send a message',
-          suffixIcon: Icon(Icons.send_rounded),
-          border: OutlineInputBorder(
+          suffixIcon: IconButton(
+            onPressed: () {
+              onSubmitted(_controller.text);
+              _controller.clear();
+            },
+            icon: const Icon(Icons.send_rounded),
+          ),
+          border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
         ),
