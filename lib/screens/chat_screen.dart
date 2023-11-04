@@ -94,10 +94,16 @@ class MessageTextField extends StatelessWidget {
           onSubmitted(value);
           _controller.clear();
         },
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           hintText: 'Send a message',
-          suffixIcon: Icon(Icons.send_rounded),
-          border: OutlineInputBorder(
+          suffixIcon: IconButton(
+            onPressed: () {
+              onSubmitted(_controller.text);
+              _controller.clear();
+            },
+            icon: const Icon(Icons.send_rounded),
+          ),
+          border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
         ),
