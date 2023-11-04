@@ -33,7 +33,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 80),
                 child: Column(
                   children: [
-                    Image.asset('assets/images/scholar.png'),
+                    Image.asset(kLogo),
                     const Text(
                       'Scholar Chat',
                       style: TextStyle(
@@ -70,6 +70,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     setState(() => isLoading = true);
                     if (isFormValid) await signUp();
                     showSnackBar(context, 'Success');
+                    Navigator.pushReplacementNamed(context, kChatScreen);
                   } on FirebaseAuthException catch (e) {
                     showSnackBar(context, e.message);
                   }

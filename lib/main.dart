@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'constants/strings.dart';
 import 'firebase_options.dart';
+import 'screens/chat_screen.dart';
 import 'screens/sign_in_screen.dart';
 import 'screens/sign_up_screen.dart';
 
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
       routes: {
         kSignInScreen: (context) => const SignInScreen(),
         kSignUpScreen: (context) => const SignUpScreen(),
+        kChatScreen: (context) => const ChatScreen(),
       },
       initialRoute: kSignInScreen,
     );
