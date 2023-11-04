@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/strings.dart';
+import '../models/message.dart';
 import '../widgets/chat_bubble.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -35,15 +36,16 @@ class ChatScreen extends StatelessWidget {
                   return const CircularProgressIndicator.adaptive();
                 } else {
                   if (snapshot.hasData) {
-                    final messages = List.from(snapshot.data!.docs
-                        .map((message) => message[kMessageKey]));
+                    final List<Message> messages = List.from(snapshot.data!.docs
+                        .map((message) => Message.fromMap(message)));
                     return ListView.builder(
                       controller: _listController,
                       padding: const EdgeInsetsDirectional.all(16),
                       reverse: true,
                       itemCount: messages.length,
                       itemBuilder: (context, index) => ChatBubble(
-                        text: messages[index],
+                        text: messages[index].message,
+                        isOwner: messages[index].email == email,
                       ),
                     );
                   } else {
