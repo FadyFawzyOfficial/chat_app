@@ -5,7 +5,9 @@ import '../constants/strings.dart';
 import '../widgets/chat_bubble.dart';
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
+  ChatScreen({super.key});
+
+  final _listController = ScrollController();
 
   @override
   Widget build(context) {
@@ -35,6 +37,7 @@ class ChatScreen extends StatelessWidget {
                     final messages = List.from(snapshot.data!.docs
                         .map((message) => message[kMessageKey]));
                     return ListView.builder(
+                      controller: _listController,
                       padding: const EdgeInsetsDirectional.all(16),
                       itemCount: messages.length,
                       itemBuilder: (context, index) => ChatBubble(
@@ -50,10 +53,18 @@ class ChatScreen extends StatelessWidget {
           ),
           MessageTextField(
             // Call the messages CollectionReference to add a new message
-            onSubmitted: (message) => messages.add({
+            onSubmitted: (message) {
+              messages.add({
                 kMessageKey: message,
                 kDateKey: DateTime.now(),
-              }),
+              });
+
+              _listController.animateTo(
+                _listController.position.maxScrollExtent,
+                duration: const Duration(seconds: 1),
+                curve: Curves.fastOutSlowIn,
+              );
+            },
           ),
         ],
       ),
