@@ -51,9 +51,9 @@ class ChatScreen extends StatelessWidget {
           MessageTextField(
             // Call the messages CollectionReference to add a new message
             onSubmitted: (message) => messages.add({
-              kMessageKey: message,
-              kDateKey: DateTime.now(),
-            }),
+                kMessageKey: message,
+                kDateKey: DateTime.now(),
+              }),
           ),
         ],
       ),
@@ -64,14 +64,20 @@ class ChatScreen extends StatelessWidget {
 class MessageTextField extends StatelessWidget {
   final Function(String) onSubmitted;
 
-  const MessageTextField({super.key, required this.onSubmitted});
+  MessageTextField({super.key, required this.onSubmitted});
+
+  final _controller = TextEditingController();
 
   @override
   Widget build(context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: TextField(
-        onSubmitted: onSubmitted,
+        controller: _controller,
+        onSubmitted: (value) {
+          onSubmitted(value);
+          _controller.clear();
+        },
         decoration: const InputDecoration(
           hintText: 'Send a message',
           suffixIcon: Icon(Icons.send_rounded),
