@@ -10,8 +10,7 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(context) {
     // Create a CollectionReference called messages that references the firestore collection
-    CollectionReference messages =
-        FirebaseFirestore.instance.collection(kMessagesKey);
+    final messages = FirebaseFirestore.instance.collection(kMessagesKey);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -26,8 +25,8 @@ class ChatScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: FutureBuilder(
-              future: messages.get(),
+            child: StreamBuilder(
+              stream: messages.snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator.adaptive();
