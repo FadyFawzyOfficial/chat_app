@@ -17,6 +17,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   var email = '';
   var password = '';
+  var isLoading = false;
 
   @override
   Widget build(context) {
@@ -62,12 +63,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 24),
               MainElevatedButton(
                 label: 'Sign Up',
+                isLoading: isLoading,
                 onPressed: () async {
                   try {
+                    setState(() => isLoading = true);
                     if (isFormValid) await signIn();
+                    showSnackBar(context, 'Success');
                   } on FirebaseAuthException catch (e) {
                     showSnackBar(context, e.message);
                   }
+                  setState(() => isLoading = false);
                 },
               ),
               const SizedBox(height: 8),
