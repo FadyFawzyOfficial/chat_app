@@ -71,6 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       context,
                       kChatScreen,
                       (route) => false,
+                      arguments: state.userEmail,
                     );
                   } else if (state.authStatus == AuthStatus.failure) {
                     showSnackBar(context, state.message);

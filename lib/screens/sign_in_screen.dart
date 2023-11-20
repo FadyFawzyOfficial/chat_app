@@ -67,7 +67,11 @@ class _SignInScreenState extends State<SignInScreen> {
               BlocConsumer<AuthCubit, AuthState>(
                 listener: (context, state) {
                   if (state.authStatus == AuthStatus.success) {
-                    Navigator.pushReplacementNamed(context, kChatScreen);
+                    Navigator.pushReplacementNamed(
+                      context,
+                      kChatScreen,
+                      arguments: state.userEmail,
+                    );
                   } else if (state.authStatus == AuthStatus.failure) {
                     showSnackBar(context, state.message);
                   }
