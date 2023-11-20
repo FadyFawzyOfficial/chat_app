@@ -8,8 +8,7 @@ const kDateKey = 'date';
 const kEmailKey = 'email';
 
 // Screen Names
-const kSignInScreen = 'SignIn';
-const kSignUpScreen = 'SignUp';
+const kAuthScreen = 'Auth';
 const kChatScreen = 'Chat';
 
 // Labels

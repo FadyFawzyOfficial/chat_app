@@ -5,9 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'constants/strings.dart';
 import 'cubits/auth/auth_cubit.dart';
 import 'firebase_options.dart';
+import 'screens/auth_screen.dart';
 import 'screens/chat_screen.dart';
-import 'screens/sign_in_screen.dart';
-import 'screens/sign_up_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,11 +28,10 @@ class App extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         routes: {
-          kSignInScreen: (context) => const SignInScreen(),
-          kSignUpScreen: (context) => const SignUpScreen(),
+          kAuthScreen: (context) => const AuthScreen(),
           kChatScreen: (context) => ChatScreen(),
         },
-        initialRoute: kSignInScreen,
+        initialRoute: kAuthScreen,
       ),
     );
   }
