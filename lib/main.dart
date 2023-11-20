@@ -1,13 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'constants/strings.dart';
-import 'cubits/auth/auth_cubit.dart';
 import 'firebase_options.dart';
+import 'screens/auth_screen.dart';
 import 'screens/chat_screen.dart';
-import 'screens/sign_in_screen.dart';
-import 'screens/sign_up_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,20 +18,16 @@ class App extends StatelessWidget {
 
   @override
   Widget build(context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          brightness: Brightness.dark,
-        ),
-        routes: {
-          kSignInScreen: (context) => const SignInScreen(),
-          kSignUpScreen: (context) => const SignUpScreen(),
-          kChatScreen: (context) => ChatScreen(),
-        },
-        initialRoute: kSignInScreen,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
       ),
+      routes: {
+        kAuthScreen: (context) => const AuthScreen(),
+        kChatScreen: (context) => ChatScreen(),
+      },
+      initialRoute: kAuthScreen,
     );
   }
 }

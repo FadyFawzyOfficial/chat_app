@@ -7,15 +7,16 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());
 
+  void toggleAuth() => emit(state.copyWith(isSignIn: !state.isSignIn));
+
   void authenticate({
-    required bool isSigningIn,
     required String email,
     required String password,
   }) async {
     emit(state.copyWith(authStatus: AuthStatus.loading));
 
     try {
-      final userCredential = isSigningIn
+      final userCredential = state.isSignIn
           ? await FirebaseAuth.instance.signInWithEmailAndPassword(
               email: email,
               password: password,
