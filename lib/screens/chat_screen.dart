@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
 
 import '../constants/strings.dart';
+import '../cubits/chat/chat_cubit.dart';
 import '../models/message.dart';
 import '../widgets/chat_bubble.dart';
 
@@ -26,54 +28,59 @@ class ChatScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder(
-              stream: messages.orderBy(kDateKey, descending: true).snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  );
-                } else {
-                  if (snapshot.hasData) {
-                    final List<Message> messages = List.from(snapshot.data!.docs
-                        .map((message) => Message.fromMap(message)));
-                    return ListView.builder(
-                      controller: _listController,
-                      padding: const EdgeInsetsDirectional.all(16),
-                      reverse: true,
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) => ChatBubble(
-                        text: messages[index].message,
-                        isOwner: messages[index].email == email,
-                      ),
+      body: BlocProvider(
+        create: (context) => ChatCubit(),
+        child: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder(
+                stream:
+                    messages.orderBy(kDateKey, descending: true).snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
                     );
                   } else {
-                    return const Text('There was an error');
+                    if (snapshot.hasData) {
+                      final List<Message> messages = List.from(snapshot
+                          .data!.docs
+                          .map((message) => Message.fromMap(message)));
+                      return ListView.builder(
+                        controller: _listController,
+                        padding: const EdgeInsetsDirectional.all(16),
+                        reverse: true,
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) => ChatBubble(
+                          text: messages[index].message,
+                          isOwner: messages[index].email == email,
+                        ),
+                      );
+                    } else {
+                      return const Text('There was an error');
+                    }
                   }
-                }
+                },
+              ),
+            ),
+            MessageTextField(
+              // Call the messages CollectionReference to add a new message
+              onSubmitted: (message) {
+                messages.add({
+                  kMessageKey: message,
+                  kDateKey: DateTime.now(),
+                  kEmailKey: email,
+                });
+
+                _listController.animateTo(
+                  _listController.initialScrollOffset,
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.fastOutSlowIn,
+                );
               },
             ),
-          ),
-          MessageTextField(
-            // Call the messages CollectionReference to add a new message
-            onSubmitted: (message) {
-              messages.add({
-                kMessageKey: message,
-                kDateKey: DateTime.now(),
-                kEmailKey: email,
-              });
-
-              _listController.animateTo(
-                _listController.initialScrollOffset,
-                duration: const Duration(seconds: 1),
-                curve: Curves.fastOutSlowIn,
-              );
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
