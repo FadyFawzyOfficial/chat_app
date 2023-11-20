@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocConsumer, ReadContext;
 
 import '../constants/strings.dart';
 import '../cubits/auth/auth_cubit.dart';
@@ -20,7 +19,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   var email = '';
   var password = '';
-  var isLoading = false;
 
   @override
   Widget build(context) {
@@ -66,27 +64,29 @@ class _SignInScreenState extends State<SignInScreen> {
                 onSaved: (value) => password = value ?? '',
               ),
               const SizedBox(height: 24),
-              BlocProvider(
-                create: (context) => AuthCubit(),
-                child: MainElevatedButton(
-                  label: 'Sign In',
-                  isLoading: isLoading,
-                  onPressed: () async {
-                    try {
-                      setState(() => isLoading = true);
-                      if (isFormValid) await signUp();
-                      showSnackBar(context, 'Success');
-                      Navigator.pushReplacementNamed(
-                        context,
-                        kChatScreen,
-                        arguments: email,
-                      );
-                    } on FirebaseAuthException catch (e) {
-                      showSnackBar(context, e.message);
-                    }
-                    setState(() => isLoading = false);
-                  },
-                ),
+              BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state.authStatus == AuthStatus.success) {
+                    Navigator.pushReplacementNamed(context, kChatScreen);
+                  } else if (state.authStatus == AuthStatus.failure) {
+                    showSnackBar(context, state.message);
+                  }
+                },
+                builder: (context, state) {
+                  return MainElevatedButton(
+                    label: 'Sign In',
+                    isLoading: state.authStatus == AuthStatus.loading,
+                    onPressed: () {
+                      if (isFormValid) {
+                        context.read<AuthCubit>().authenticate(
+                              isSigningIn: true,
+                              email: email,
+                              password: password,
+                            );
+                      }
+                    },
+                  );
+                },
               ),
               const SizedBox(height: 8),
               Row(
@@ -113,12 +113,5 @@ class _SignInScreenState extends State<SignInScreen> {
 
     form.save();
     return true;
-  }
-
-  Future<void> signUp() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
   }
 }
