@@ -20,12 +20,13 @@ class ChatCubit extends Cubit<List<Message>> {
 
   void get messages =>
       _messages.orderBy(kDateKey, descending: true).snapshots().listen(
-            (snapshot) => emit(
-              List.from(
-                snapshot.docs.map(
-                  (message) => Message.fromMap(message),
-                ),
-              ),
-            ),
-          );
+        (snapshot) {
+          final List<Message> messages = [];
+
+          for (var doc in snapshot.docs) {
+            messages.add(Message.fromMap(doc));
+          }
+          emit(messages);
+        },
+      );
 }
