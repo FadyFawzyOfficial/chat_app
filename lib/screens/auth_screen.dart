@@ -83,7 +83,6 @@ class _AuthScreenState extends State<AuthScreen> {
                   onPressed: () {
                     if (isFormValid) {
                       context.read<AuthCubit>().authenticate(
-                            isSigningIn: true,
                             email: email,
                             password: password,
                           );
