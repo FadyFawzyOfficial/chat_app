@@ -7,6 +7,8 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthState.initial());
 
+  void toggleAuth() => emit(state.copyWith(isSignIn: !state.isSignIn));
+
   void authenticate({
     required bool isSigningIn,
     required String email,
