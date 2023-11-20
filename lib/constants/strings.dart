@@ -11,3 +11,12 @@ const kEmailKey = 'email';
 const kSignInScreen = 'SignIn';
 const kSignUpScreen = 'SignUp';
 const kChatScreen = 'Chat';
+
+// Labels
+const kAppName = 'Scholar Chat';
+const kSignInLabel = 'Sign In';
+const kSignUpLabel = 'Sign Up';
+const kEmailLabel = 'Email';
+const kPasswordLabel = 'Password';
+const kSignUpMessage = 'Don\'t have an account?';
+const kSignInMessage = 'Already have an account?';

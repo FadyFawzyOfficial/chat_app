@@ -36,7 +36,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   children: [
                     Image.asset(kLogo),
                     const Text(
-                      'Scholar Chat',
+                      kAppName,
                       style: TextStyle(fontSize: 32, fontFamily: 'Pacifico'),
                     ),
                   ],
@@ -47,20 +47,20 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: BlocSelector<AuthCubit, AuthState, bool>(
                   selector: (state) => state.isSignIn,
                   builder: (context, isSignIn) => Text(
-                    isSignIn ? 'Sign In' : 'Sign Up',
+                    isSignIn ? kSignInLabel : kSignUpLabel,
                     style: const TextStyle(fontSize: 24),
                   ),
                 ),
               ),
               const SizedBox(height: 24),
               MainTextFormField(
-                label: 'Email',
+                label: kEmailLabel,
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (value) => email = value ?? '',
               ),
               const SizedBox(height: 16),
               MainTextFormField(
-                label: 'Password',
+                label: kPasswordLabel,
                 obscureText: true,
                 onSaved: (value) => password = value ?? '',
               ),
@@ -78,7 +78,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   }
                 },
                 builder: (context, state) => MainElevatedButton(
-                  label: state.isSignIn ? 'Sign In' : 'Sign Up',
+                  label: state.isSignIn ? kSignInLabel : kSignUpLabel,
                   isLoading: state.authStatus == AuthStatus.loading,
                   onPressed: () {
                     if (isFormValid) {
@@ -97,14 +97,10 @@ class _AuthScreenState extends State<AuthScreen> {
                 builder: (context, isSignIn) => Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      isSignIn
-                          ? 'Don\'t have an account?'
-                          : 'Already have an account?',
-                    ),
+                    Text(isSignIn ? kSignUpMessage : kSignInMessage),
                     TextButton(
                       onPressed: context.read<AuthCubit>().toggleAuth,
-                      child: Text(isSignIn ? 'Sign Up' : 'Sign In'),
+                      child: Text(isSignIn ? kSignUpLabel : kSignInLabel),
                     ),
                   ],
                 ),
