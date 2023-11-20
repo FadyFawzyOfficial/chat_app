@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
+import 'package:flutter_bloc/flutter_bloc.dart'
+    show BlocBuilder, BlocProvider, ReadContext;
 
 import '../constants/strings.dart';
 import '../cubits/chat/chat_cubit.dart';
@@ -15,8 +15,6 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(context) {
     final email = ModalRoute.of(context)!.settings.arguments as String;
-    // Create a CollectionReference called messages that references the firestore collection
-    final messages = FirebaseFirestore.instance.collection(kMessagesKey);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -29,57 +27,41 @@ class ChatScreen extends StatelessWidget {
         ),
       ),
       body: BlocProvider(
-        create: (context) => ChatCubit(),
-        child: Column(
-          children: [
-            Expanded(
-              child: StreamBuilder(
-                stream:
-                    messages.orderBy(kDateKey, descending: true).snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    );
-                  } else {
-                    if (snapshot.hasData) {
-                      final List<Message> messages = List.from(snapshot
-                          .data!.docs
-                          .map((message) => Message.fromMap(message)));
-                      return ListView.builder(
-                        controller: _listController,
-                        padding: const EdgeInsetsDirectional.all(16),
-                        reverse: true,
-                        itemCount: messages.length,
-                        itemBuilder: (context, index) => ChatBubble(
-                          text: messages[index].message,
-                          isOwner: messages[index].email == email,
-                        ),
-                      );
-                    } else {
-                      return const Text('There was an error');
-                    }
-                  }
-                },
-              ),
-            ),
-            MessageTextField(
-              // Call the messages CollectionReference to add a new message
-              onSubmitted: (message) {
-                messages.add({
-                  kMessageKey: message,
-                  kDateKey: DateTime.now(),
-                  kEmailKey: email,
-                });
+        create: (context) => ChatCubit()..messages,
+        child: BlocBuilder<ChatCubit, List<Message>>(
+          builder: (context, state) {
+            final messages = state;
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    controller: _listController,
+                    padding: const EdgeInsetsDirectional.all(16),
+                    reverse: true,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) => ChatBubble(
+                      text: messages[index].message,
+                      isOwner: messages[index].email == email,
+                    ),
+                  ),
+                ),
+                MessageTextField(
+                  // Call the messages CollectionReference to add a new message
+                  onSubmitted: (message) {
+                    context
+                        .read<ChatCubit>()
+                        .sendMessage(email: email, message: message);
 
-                _listController.animateTo(
-                  _listController.initialScrollOffset,
-                  duration: const Duration(seconds: 1),
-                  curve: Curves.fastOutSlowIn,
-                );
-              },
-            ),
-          ],
+                    _listController.animateTo(
+                      _listController.initialScrollOffset,
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.fastOutSlowIn,
+                    );
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
