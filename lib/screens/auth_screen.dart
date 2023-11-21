@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'
     show BlocConsumer, BlocProvider, BlocSelector, ReadContext;
 
+import '../blocs/auth/auth_bloc.dart';
 import '../constants/strings.dart';
-import '../cubits/auth/auth_cubit.dart';
 import '../utilities/snack_bar_shower.dart';
 import '../widgets/main_elevated_button.dart';
 import '../widgets/main_text_form_field.dart';
@@ -29,7 +29,7 @@ class _AuthScreenState extends State<AuthScreen> {
         child: Form(
           key: _formKey,
           child: BlocProvider(
-            create: (context) => AuthCubit(),
+            create: (context) => AuthBloc(),
             child: Column(
               children: [
                 Padding(
@@ -46,7 +46,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: BlocSelector<AuthCubit, AuthState, bool>(
+                  child: BlocSelector<AuthBloc, AuthState, bool>(
                     selector: (state) => state.isSignIn,
                     builder: (context, isSignIn) => Text(
                       isSignIn ? kSignInLabel : kSignUpLabel,
@@ -67,7 +67,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   onSaved: (value) => password = value ?? '',
                 ),
                 const SizedBox(height: 24),
-                BlocConsumer<AuthCubit, AuthState>(
+                BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
                     if (state.authStatus == AuthStatus.success) {
                       Navigator.pushReplacementNamed(
@@ -84,23 +84,22 @@ class _AuthScreenState extends State<AuthScreen> {
                     isLoading: state.authStatus == AuthStatus.loading,
                     onPressed: () {
                       if (isFormValid) {
-                        context.read<AuthCubit>().authenticate(
-                              email: email,
-                              password: password,
-                            );
+                        context.read<AuthBloc>().add(AuthAuthenticated(
+                            email: email, password: password));
                       }
                     },
                   ),
                 ),
                 const SizedBox(height: 8),
-                BlocSelector<AuthCubit, AuthState, bool>(
+                BlocSelector<AuthBloc, AuthState, bool>(
                   selector: (state) => state.isSignIn,
                   builder: (context, isSignIn) => Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(isSignIn ? kSignUpMessage : kSignInMessage),
                       TextButton(
-                        onPressed: context.read<AuthCubit>().toggleAuth,
+                        onPressed: () =>
+                            context.read<AuthBloc>().add(AuthToggled()),
                         child: Text(isSignIn ? kSignUpLabel : kSignInLabel),
                       ),
                     ],
